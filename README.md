@@ -2,7 +2,7 @@
 
 This is a project that analyzes text from tweets based on user input. To start, I decided Jalen Hurts would be my criteria
 
-##Installation
+## Installation
 
 I created a virtual environment to work with. You can do this too with
 
