@@ -4,7 +4,7 @@ import numpy as np
 import tweepy
 from tweepy import OAuthHandler
 from textblob import TextBlob
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 from wordcloud import STOPWORDS, wordcloud
 from better_profanity import profanity
@@ -48,10 +48,55 @@ def clean_tweet(tweet):
     r = re.sub('\[.*?\]',' ', r)
     r = re.sub("[^a-z0-9]"," ", r)
     r = r.split()
-    STOPWORDS = ["for", "on", "an", "a", "of", "and", "in", "the", "to", "from"]
-    r = [w for w in r if not w in STOPWORDS]
+    r = [w for w in r]
     r = " ".join(word for word in r)
     return r
 
 cleaned = [clean_tweet(tw) for tw in tweet_list]
-print(cleaned)
+#print('\n', cleaned)
+#for t in cleaned:
+    #print()
+    #print(t)
+
+
+#Define sentiments using textblob
+sentiment_obj = [TextBlob(tweet) for tweet in cleaned]
+sentiment_obj[0].polarity, sentiment_obj[0]
+
+#Create a list
+sentiment_val = [[tweet.sentiment.polarity, str(tweet)] for tweet in sentiment_obj]
+#print(sentiment_val[0])
+
+sentiemnt_dataframe = pd.DataFrame(sentiment_val, columns=['Polarity', 'Tweet'])
+
+#print(sentiemnt_dataframe)
+
+polarity_col = sentiemnt_dataframe['Polarity']
+m = pd.Series(polarity_col)
+
+pos_count = 0
+neg_count = 0
+neu_count = 0
+
+for items in m:
+    if items>0:
+        print('Positive')
+        pos_count += 1
+    elif items < 0 :
+        print('Negative')
+        neg_count += 1
+    else:
+        print('Neutral')
+        neu_count += 1
+
+print(pos_count,neg_count,neu_count)
+
+pie_labels = ["Positive", "Negative", "Neutral"]
+population_share = [pos_count, neg_count, neu_count]
+
+figureObject, axesObject = plt.subplots()
+
+axesObject.pie(population_share, labels = pie_labels, autopct='%1.2f', startangle = 90)
+
+axesObject.axis('equal')
+plt.show()
